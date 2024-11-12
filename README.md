@@ -1,4 +1,4 @@
-# Autonomous RC Car Race 2024
+# Autonomous RC Car Race 2025
 
 ![Us at ENS](documentation/pictures/ens_pic.jpeg)
 
