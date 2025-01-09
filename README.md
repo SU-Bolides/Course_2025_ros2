@@ -1,3 +1,24 @@
+# Goals for 2025
+
+## REPORT EVERYTHING
+
+Log. Every. Thing. You. Do. Yes, even the slightest thing. This helps track changes, learn from others' mistakes, and is just good practice. 
+
+## Implement NMPC
+
+Didn't have time in 2024, better than the bodged together Stanley controller. Should also be able to avoid obstacles. 
+
+## Implement car detection using computer vision. 
+
+Supposed to get a Qualcomm RB5, probably won't, but we should still try and explore the vision option. Not my field of expertise, but the conditions are very optimal, so we'll maybe get something that works. 
+
+## Optional: Double up on pies.
+
+Two Raspberry Pis. One for the SLAM localization, another for the NMPC. More = better, right? Maybe dedicate one to only doing Vision stuff, if it's too heavy to run concurrently. To be tried out. 
+
+
+
+
 # Autonomous RC Car Race 2025
 
 ![Us at ENS](documentation/pictures/ens_pic.jpeg)
