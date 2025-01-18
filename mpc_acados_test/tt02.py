@@ -1,7 +1,8 @@
 ### KINEMATIC MODEL FOR THE TT02
 
 
-from acados_template import AcadosOcp, AcadosOcpSolver, AcadosModel
+
+from acados_template import AcadosModel
 import casadi as ca
 import os
 from pathlib import Path
@@ -22,7 +23,7 @@ def getTrack(filename):
 
 class AckermannCar:
 
-    def __init__(self, L=0.257):
+    def __init__(self, L=0.257,track="su_bigmap_splined.txt", dt=1/12.):
         self.L = L 
 
         # we consider the CoM to be centered between the two axles. 
@@ -31,12 +32,54 @@ class AckermannCar:
         self.m = 2.334
 
         #Motor params. To be identified
-        self.Cm = 0.5
-        self.Cr0 = 0.0
-        self.Cr2 = 0.0
+        self.Cm = 2.3
+        self.Cr0 = 0.0518
+        self.Cr2 = 0.00035
 
-    def create_model(self, track="su_bigmap_splined.txt"):
+        # "Cm1" : 0.287,
+        # "Cm2" : 0.0545,
 
+        # "Cr0" : 0.0518,
+        # "Cr2" : 0.00035,
+        self.model = self.create_model(track,dt)
+
+    def create_model(self, track="su_bigmap_splined.txt", dt=1/12.):
+
+        # load track parameters
+        [s_ref, x_ref, y_ref, psi_ref, kappa_ref] = getTrack(track)
+        
+        # THREE INTERPOLANTS
+        # Psi, X, Y
+
+        # Pad out the variables start and end to get a smooth transition. 
+        # We'll not care about the padded bits cause they'll be redundant, but it's to have 
+        # a continuity between L and 0 (track length L, looping, yk)
+
+
+        #Step 1: 1,2,3,4 -> 1,2,3,4,1,2,3,4, for x, y and psi
+        #        1,2,3,4 -> 1,2,3,4,5,6,7,8  for s
+        s_ref = np.append(s_ref, s_ref[-1] + s_ref[1:])
+        x_ref_s = np.append(x_ref, x_ref[:-1])
+        y_ref_s = np.append(y_ref, y_ref[:-1])
+        psi_ref_s = np.append(psi_ref, psi_ref[:-1])
+
+        #Step 2: 1,2,3,4,1,2,3,4 -> -3,-2,-1,0,1,2,3,4,1,2,3,4 for s
+        
+        s_ref = np.append(-s_ref[21] + s_ref[:21], s_ref)
+        x_ref_s = np.append(x_ref_s[-21:], x_ref_s)
+        y_ref_s = np.append(y_ref_s[-21:], y_ref_s)
+        psi_ref_s = np.append(psi_ref_s[-21:], psi_ref_s)
+
+
+        x_ref_s = ca.interpolant("x_ref_s", "linear", [s_ref], x_ref_s)
+        y_ref_s = ca.interpolant("y_ref_s", "linear", [s_ref], y_ref_s)
+        psi_ref_s = ca.interpolant("psi_ref_s", "linear", [s_ref], psi_ref_s)
+        self.psi_ref_s = psi_ref_s
+        self.x_ref_s = x_ref_s
+        self.y_ref_s = y_ref_s
+        #trackwidths
+
+    
         #statedot = xdot ydot thetadot vxdot vydot omegadot thetaAdot deltadot Ddot vthetadot
 
         x = ca.MX.sym("x") #x in track frame
@@ -87,79 +130,133 @@ class AckermannCar:
 
         
         #Kinematics: x_state_dot = f(x_state, u_control)
-        Fx = self.Cm*D - self.Cr0 - self.Cr2*vx*vx
+        Fx = self.Cm*D #- self.Cr0 - self.Cr2*vx*vx
         f_expl = ca.vertcat(
             vx * ca.cos(theta) - vy * ca.sin(theta),
             vx * ca.sin(theta) + vy * ca.cos(theta),
             omega,
             Fx/self.m,
-            (delta_dot * vx + delta*vx_dot) * (self.lr/self.L),
-            (delta_dot * vx + delta*vx_dot) * (1/self.L),
+            (derDelta * vx + delta*Fx/self.m) * (self.lr/self.L),
+            delta * vx * (1/self.L),
             vtheta,
             derDelta,
             derD,
             derVtheta
         )
-
         
+        #Cost functions formulation
+        
+        # Contouring error
+        e_c = ca.sin(psi_ref_s(thetaA))*(x - x_ref_s(thetaA)) - ca.cos(psi_ref_s(thetaA))*(y - y_ref_s(thetaA))
+
+        # Lag error
+        e_l = -ca.cos(psi_ref_s(thetaA))*(x - x_ref_s(thetaA)) - ca.sin(psi_ref_s(thetaA))*(y - y_ref_s(thetaA))
+
+        self.errors = ca.Function("errors", [x,y,thetaA], [e_c,e_l])
+
+        #e_c = -(y - y_ref_s(0.6))
+        #e_l = -(x-x_ref_s(0.6))
+        # Weights - To Be Adjusted
+        
+        # # Contouring cost
+        # J = qc*e_c**2 + ql*e_l**2 - kv * vtheta
+        # Je = 10 * qc * e_c**2 + ql * e_l**2 - kv*vtheta
+
+        q_c = 40.0
+        q_l = 20.0
+        kv = 10.0
+        ktheta = 6.0
+
+       
+
+        # # Control input penalization
+        Ru  = ca.diag([1e-2, 1e-4, 0]) #We want to maximize vtheta!
+
+        Rdu = ca.diag([1e-1, 1e-1, 1e-4])
+
+
+        #This is part of the state
+        u   = ca.vertcat(delta, D, theta)
+
+
+        J = e_c*e_c*q_c + e_l*e_l*q_l
+        Je = e_c*e_c*q_c + e_l*e_l*q_l
+        R = u_control.T @ Rdu @ u_control + u.T @ Ru @ u 
+
+
+
+
+        cost_expr = J + R - ktheta*vtheta
+
+
+
+
+        cost_function = ca.Function('cost_function', [x_state, u_control], [J, R, e_c,e_l, cost_expr])
+
+
+
+
+        # Constraint to respect track width
+        a_lat = 0.5 * vx * vx * delta + Fx * ca.sin(3.9 * delta) / self.m
+        circle_func = (x - x_ref_s(thetaA))**2 + (y - y_ref_s(thetaA))**2
+
+        lh_constraints = ca.vertcat(circle_func, a_lat, Fx/self.m)
+
         # Build the AcadosModel
         model = AcadosModel()
         model.f_expl_expr = f_expl
+
         # For an explicit model: f_impl_expr = xdot - f_expl
         # either form is fine as long as it's consistent
-        model.f_impl_expr = ca.vertcat(s_dot, e_dot, alpha_dot, delta_dot) - f_expl
-        # model.f_impl_expr = ca.vertcat(s_dot, v_dot) - f_expl
+        model.f_impl_expr = ca.vertcat(x_dot, y_dot, theta_dot, vx_dot, vy_dot, omega_dot, thetaA_dot, delta_dot, D_dot, vtheta_dot) - f_expl
 
         # model.params = params
 
-        model.x = x
-        model.u = u
-        model.xdot = x_dot
-        model.name = "kinematic_bicycle"
+        model.x = x_state
+        model.u = u_control
+        model.xdot = x_state_dot
+        model.name = "tt02"
 
-        constraint = ca.types.SimpleNamespace()
+        # Time step
 
-        constraint.delta_min = -0.4
-        constraint.delta_max = 0.4
+        # Define the continuous dynamics
+        f = ca.Function('f', [x_state, u_control], [f_expl])
 
-        constraint.steering_rate_min = -12
-        constraint.steering_rate_max = 12 
-
-        constraint.v_min = -5.0
-        constraint.v_max = 5.0
+        # RK4 Integration
+        x_k = ca.MX.sym("x_k", x_state.size1())  # Current state
+        u_k = ca.MX.sym("u_k", u_control.size1())  # Control input
 
 
-        return model, constraint
+        k1 = f(x_k, u_k)
+        k2 = f(x_k + dt / 2 * k1, u_k)
+        k3 = f(x_k + dt / 2 * k2, u_k)
+        k4 = f(x_k + dt * k3, u_k)
 
-    def kinematics(self, state, control, dt=1/12.):
-        x, y, theta, beta = state
-        
+        x_next = x_k + dt / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
 
-        v = min(max(control[0], -5.0), 5.0)
-        steering_rate = min(max(control[1], -10), 10)
+        # Create a CasADi function for the discrete-time model
+        self.f_discrete = ca.Function('f_discrete', [x_k, u_k], [x_next])
 
-        xdot = v * math.cos(theta)
-        ydot = v * math.sin(theta)
-        thetadot = v/self.L * math.tan(beta)
-        betadot = steering_rate
+        return model, cost_expr, J, cost_function, Je, lh_constraints
 
-        x = x + dt * xdot
-        y = y + dt * ydot
-        theta = theta + dt * thetadot
-        beta = beta + dt * betadot
+    def integration(self, state, control):
+        state = self.f_discrete(state, control)
+        print(f"\n\nthetaA = {state[6]}, x_ref, y_ref {float(self.x_ref_s(state[6])), float(self.y_ref_s(state[6]))}, psi_ref = {float(self.psi_ref_s(state[6]))} e_c, e_l{self.errors(state[0], state[1], state[6])} \n\n ")
+        e_c =self.errors(state[0], state[1], state[6])[0]
+        e_l =self.errors(state[0], state[1], state[6])[1]
+        return np.array(state), e_c, e_l
 
-        beta = min(max(beta, -0.4), 0.4)
-
-        return [x,y,theta,beta]
     
 if __name__ == "__main__":
     tt02 = AckermannCar(L=0.257)
 
-    state = [0.,0.,0.,0.]
-    control = [1.0,0.]
+    state = [0.,0.,0.,0.,0.,0.,0.,0.,0.,0.]
+    control = [0.,1.,0.] #derDelta, derD, derVtheta
 
 
-    for i in range(12):
-        state = tt02.kinematics(state,control)
+    for i in range(200):
+        control[1] = 0.0      # derD = 0
+        D = 1.0
+        state[8] = D          # force duty cycle = 1
+        state = tt02.integration(state, control)
         print(i, state)
-
