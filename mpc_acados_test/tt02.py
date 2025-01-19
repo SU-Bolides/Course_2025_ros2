@@ -10,7 +10,11 @@ import numpy as np
 
 
 def getTrack(filename):
-    track_file = os.path.join(str(Path(__file__).parent), filename)
+    filename2 = "splined_tracks/" + filename
+    track_file = os.path.join(str(Path(__file__).parent), filename2)
+
+    print(" LOADING FILE  ", filename)
+
     # array=np.loadtxt(track_file, delimiter=",")
     array= np.loadtxt(track_file)
     sref=array[:,0]
@@ -27,15 +31,23 @@ class AckermannCar:
         self.L = L 
 
         # we consider the CoM to be centered between the two axles. 
-        self.lf = L/2.
-        self.lr = L/2. 
-        self.m = 2.334
+        self.lf = 0.137
+        self.lr = 0.100
+        self.m = 3.84
 
         #Motor params. To be identified
-        self.Cm = 2.3
-        self.Cr0 = 0.0518
-        self.Cr2 = 0.00035
+        self.Cm = 14.959
+        self.Cr0 = 1.327
+        self.Cr2 = 0.559
 
+        # self.Iz = 0.152
+
+        # self.Bf = 10.603
+        # self.Cf = 5.520
+        # self.Df = 0.475
+        # self.Br = 3.014
+        # self.Cr = 3.413
+        # self.Dr = 0.467
         # "Cm1" : 0.287,
         # "Cm2" : 0.0545,
 
@@ -58,6 +70,8 @@ class AckermannCar:
 
         #Step 1: 1,2,3,4 -> 1,2,3,4,1,2,3,4, for x, y and psi
         #        1,2,3,4 -> 1,2,3,4,5,6,7,8  for s
+        self.track_length = np.max(s_ref)
+        self.start_pos = (x_ref[0], y_ref[0], psi_ref[2])
         s_ref = np.append(s_ref, s_ref[-1] + s_ref[1:])
         x_ref_s = np.append(x_ref, x_ref[:-1])
         y_ref_s = np.append(y_ref, y_ref[:-1])
@@ -130,19 +144,42 @@ class AckermannCar:
 
         
         #Kinematics: x_state_dot = f(x_state, u_control)
-        Fx = self.Cm*D #- self.Cr0 - self.Cr2*vx*vx
+        Fx = self.Cm*D - self.Cr0 - self.Cr2*vx*vx
         f_expl = ca.vertcat(
             vx * ca.cos(theta) - vy * ca.sin(theta),
             vx * ca.sin(theta) + vy * ca.cos(theta),
             omega,
             Fx/self.m,
             (derDelta * vx + delta*Fx/self.m) * (self.lr/self.L),
-            delta * vx * (1/self.L),
+            (derDelta * vx + delta*Fx/self.m) * (1/self.L),
             vtheta,
             derDelta,
             derD,
             derVtheta
         )
+
+        #Dynamics: x_state_dot = f(x_state, u_control)
+        # Fx = self.Cm*D - self.Cr0 - self.Cr2*vx*vx
+        # alphar = ca.atan((vy - self.lr*omega) / vx)
+
+        # alphaf = ca.atan((vy + self.lf*omega) / vx) - delta
+
+        # Fry = self.Dr * ca.sin(self.Cr * ca.atan(self.Br * alphar))
+        # Ffy = self.Df * ca.sin(self.Cf * ca.atan(self.Bf * alphaf))
+
+
+        # f_expl = ca.vertcat(
+        #     vx * ca.cos(theta) - vy * ca.sin(theta),
+        #     vx * ca.sin(theta) + vy * ca.cos(theta),
+        #     omega,
+        #     (1/self.m)*(Fx - Ffy*ca.sin(delta) + self.m*vy*omega),
+        #     (1/self.m)*(Fx + Ffy*ca.cos(delta) - self.m*vx*omega),
+        #     (1/self.Iz)*(Ffy*self.lf*ca.cos(delta) - Fry*self.lr),
+        #     vtheta,
+        #     derDelta,
+        #     derD,
+        #     derVtheta
+        # )
         
         #Cost functions formulation
         
@@ -161,26 +198,30 @@ class AckermannCar:
         # # Contouring cost
         # J = qc*e_c**2 + ql*e_l**2 - kv * vtheta
         # Je = 10 * qc * e_c**2 + ql * e_l**2 - kv*vtheta
+        unscale = 1./dt 
+        #Because the cost is the sum over all the shooting nodes, we need to keep this constant.
 
-        q_c = 40.0
-        q_l = 20.0
-        kv = 10.0
-        ktheta = 6.0
+        q_c = 0.13 * unscale 
+        q_l = 0.2 * unscale 
+        ktheta = 0.1 * unscale
 
-       
+        
+
 
         # # Control input penalization
-        Ru  = ca.diag([1e-2, 1e-4, 0]) #We want to maximize vtheta!
+        Ru  = unscale * ca.diag([1e-2, 1e-5, 1e-2]) #We want to maximize vtheta!
 
-        Rdu = ca.diag([1e-1, 1e-1, 1e-4])
+        #u_control = ca.vertcat(derDelta, derD, derVtheta) #Control vector
+        Rdu = unscale * ca.diag([1e-2, 1e-2, 1e-2])
+
 
 
         #This is part of the state
         u   = ca.vertcat(delta, D, theta)
 
 
-        J = e_c*e_c*q_c + e_l*e_l*q_l
-        Je = e_c*e_c*q_c + e_l*e_l*q_l
+        J = e_c*e_c*q_c + e_l*e_l*q_l 
+        Je = 2 * e_c*e_c*q_c + e_l*e_l*q_l
         R = u_control.T @ Rdu @ u_control + u.T @ Ru @ u 
 
 
@@ -197,10 +238,12 @@ class AckermannCar:
 
 
         # Constraint to respect track width
-        a_lat = 0.5 * vx * vx * delta + Fx * ca.sin(3.9 * delta) / self.m
+        a_lat = 0.5*vx*vx*delta + Fx * ca.sin(3.9 * delta) / self.m
         circle_func = (x - x_ref_s(thetaA))**2 + (y - y_ref_s(thetaA))**2
 
-        lh_constraints = ca.vertcat(circle_func, a_lat, Fx/self.m)
+        # lh_constraints = ca.vertcat(e_c, a_lat, Fx/self.m)
+        lh_constraints = ca.vertcat(circle_func, a_lat)
+
 
         # Build the AcadosModel
         model = AcadosModel()
@@ -237,13 +280,29 @@ class AckermannCar:
         # Create a CasADi function for the discrete-time model
         self.f_discrete = ca.Function('f_discrete', [x_k, u_k], [x_next])
 
-        return model, cost_expr, J, cost_function, Je, lh_constraints
+        return model, cost_expr, J, cost_function, Je, lh_constraints, x_ref_s, y_ref_s
 
     def integration(self, state, control):
         state = self.f_discrete(state, control)
-        print(f"\n\nthetaA = {state[6]}, x_ref, y_ref {float(self.x_ref_s(state[6])), float(self.y_ref_s(state[6]))}, psi_ref = {float(self.psi_ref_s(state[6]))} e_c, e_l{self.errors(state[0], state[1], state[6])} \n\n ")
+        # state[0] = np.clip(state[0], -10, 10)
+        # state[1] = np.clip(state[1], -10, 10)
+        # # state[2] = np.clip(state[2], -10, 10)
+        # state[3] = np.clip(state[3], -0.1, 5)
+        # state[4] = np.clip(state[4], -3.0, 3.0)
+        # state[5] = np.clip(state[5], -8.0, 8.0)
+        state[6] = np.clip(state[6], -1.0, self.track_length)
+        # state[7] = np.clip(state[7], -0.5, 0.5)
+        # state[8] = np.clip(state[8], -1.0, 1.0)
+        # state[8] = np.clip(state[8], 0.05, 8.0)
+        # # if state[6] > self.track_length:
+        # #     state[6] = state[6]-self.track_length
+        print(state[0], state[6])
+
+        # print(f"\n\nthetaA = {state[6]}, x_ref, y_ref {float(self.x_ref_s(state[6])), float(self.y_ref_s(state[6]))}, psi_ref = {float(self.psi_ref_s(state[6]))} e_c, e_l{self.errors(state[0], state[1], state[6])} \n\n ")
         e_c =self.errors(state[0], state[1], state[6])[0]
         e_l =self.errors(state[0], state[1], state[6])[1]
+
+        print("current e_c = ", e_c)
         return np.array(state), e_c, e_l
 
     
@@ -254,9 +313,9 @@ if __name__ == "__main__":
     control = [0.,1.,0.] #derDelta, derD, derVtheta
 
 
-    for i in range(200):
+    for i in range(800):
         control[1] = 0.0      # derD = 0
         D = 1.0
         state[8] = D          # force duty cycle = 1
-        state = tt02.integration(state, control)
-        print(i, state)
+        state, _, _ = tt02.integration(state, control)
+    print(i, state)
