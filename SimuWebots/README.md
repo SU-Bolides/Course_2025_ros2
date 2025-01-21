@@ -1,3 +1,13 @@
+# How to get the car to the same level as the actual car:
+
+Step 1: Launch roscore
+Step 2: Launch webots
+Step 3: roslaunch perception_bolide perception_sim.launch
+
+This should bring the simulation car to the same level of control and publishing as the real car. 
+
+
+
 # Webots simulations for autonomous car racing
 
 ![](tutorials/WebotScreenExample.png)
