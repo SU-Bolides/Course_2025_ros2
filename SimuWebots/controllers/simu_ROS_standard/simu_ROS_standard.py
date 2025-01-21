@@ -28,7 +28,7 @@ my_fork_publisher = SimuForkPublisher(my_controller, my_bot_name)
 
 
 
-#%% TIMERS ===============================================================================
+# %% TIMERS ===============================================================================
 F_LIDAR = 12
 rospy.Timer(rospy.Duration(1 / F_LIDAR), my_lidar_publisher.publish_lidar_data)
 

@@ -33,7 +33,7 @@ class SimuCameraPublisher():
         self.driver = driver
         
         # Publisher
-        topic_name = "/" + bot_name + "/raw_image_data"
+        topic_name = "/raw_image_data"
         rospy.loginfo("Initializing camera publisher on topic: " + topic_name)
         self.pub_img = rospy.Publisher(topic_name, SensorImage, queue_size=10)
 

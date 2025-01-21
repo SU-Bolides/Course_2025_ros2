@@ -19,7 +19,7 @@ class SimuForkPublisher():
         self.simu_controller = simuController
 
         # Publisher
-        topic_name = "/" + bot_name + "/raw_fork_data"
+        topic_name = "/raw_fork_data"
         rospy.loginfo("Initializing fork sensor publisher on topic: " + topic_name)
         self.pub_fork_speed = rospy.Publisher(topic_name, ForkSpeed, queue_size=10)
 
@@ -41,7 +41,9 @@ class SimuForkPublisher():
         
         # Update the ForkSpeed message
         self.forkSpeed.header.stamp = rospy.Time.now()
-        self.forkSpeed.speed = self.simu_controller.speed
+        # self.forkSpeed.speed = self.simu_controller.speed #THIS AINT IT CHIEF
+        self.forkSpeed.speed = abs(self.simu_controller.speed) / 3.6
+
         # the fork sensor can't be implemented in the simulation so we just set it to the speed of the vehicle
 
         # Publish the MultiRange message

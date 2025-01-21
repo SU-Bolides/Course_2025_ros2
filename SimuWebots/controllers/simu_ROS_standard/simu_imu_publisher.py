@@ -21,7 +21,7 @@ class SimuImuPublisher():
         self.driver = driver
         
         # Publisher
-        topic_name = "/" + bot_name + "/raw_imu_data"
+        topic_name = "/raw_imu_data"
         rospy.loginfo("Initializing imu publisher on topic: " + topic_name)
         self.pub_imu = rospy.Publisher(topic_name, SensorImu, queue_size=10)
 
@@ -65,10 +65,11 @@ class SimuImuPublisher():
         """Publishes the accelerometer data in the publisher topic"""
 
         # inertial unit
-        roll, pitch, yaw = self.inertial_unit.getRollPitchYaw()
-        self.imuFrame.orientation.x = roll
-        self.imuFrame.orientation.y = pitch
-        self.imuFrame.orientation.z = yaw
+        x,y,z,w = self.inertial_unit.getQuaternion()
+        self.imuFrame.orientation.x = x
+        self.imuFrame.orientation.y = y
+        self.imuFrame.orientation.z = z
+        self.imuFrame.orientation.w = w
 
         # accelerometer
         linear_acceleration = self.accelerometer.getValues()

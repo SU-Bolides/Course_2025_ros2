@@ -22,7 +22,7 @@ class SimuRearRangesPublisher():
         self.driver = driver
         
         # Publisher
-        topic_name = "/" + bot_name + "/raw_rear_range_data"
+        topic_name = "/raw_rear_range_data"
         rospy.loginfo("Initializing rear range sensors publisher on topic: " + topic_name)
         self.pub_img = rospy.Publisher(topic_name, MultipleRange, queue_size=10)
 

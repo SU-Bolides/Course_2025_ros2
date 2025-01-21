@@ -22,7 +22,7 @@ class SimuLidarPublisher():
         self.driver = driver
         
         # Publisher
-        topic_name = "/" + bot_name + "/raw_lidar_data"
+        topic_name = "/raw_lidar_data"
         rospy.loginfo("Initializing lidar publisher on topic: " + topic_name)
         self.pub_scan = rospy.Publisher(topic_name, LaserScan, queue_size=10)
 
@@ -44,18 +44,18 @@ class SimuLidarPublisher():
         self.lidarScan.header.frame_id = "lidar_frame"
         self.lidarScan.angle_min = 0 # in radians
         self.lidarScan.angle_max = 2*np.pi
-        self.lidarScan.angle_increment = 2*np.pi/360
-        self.lidarScan.time_increment = self.lidar.getSamplingPeriod()
-        self.lidarScan.scan_time = self.lidarScan.time_increment * 360
+        self.lidarScan.angle_increment = 2*np.pi/1153
+        self.lidarScan.time_increment = self.lidar.getSamplingPeriod() / 1000.
+        self.lidarScan.scan_time = self.lidarScan.time_increment * 1153
         self.lidarScan.range_min = 0.17
         self.lidarScan.range_max = 12.0
 
-        self.lidarScan.ranges = [0.] * 360
+        self.lidarScan.ranges = [0.] * 1153
 
     
     def treat_lidar_data(self, lidar_data) -> list:
         """outputs 360 values, no inf values"""
-        num_degrees = 360
+        num_degrees = 1153
         num_bin = len(lidar_data)
         bin_size = num_bin / num_degrees
 
