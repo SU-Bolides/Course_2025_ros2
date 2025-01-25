@@ -1,0 +1,291 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/road/protos/StraightRoadSegment.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/road/protos/RoadLine.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/road/protos/CurvedRoadSegment.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/Pavement.proto"
+EXTERNPROTO "../protos/MyRobot.proto"
+
+WorldInfo {
+  title "simu_v4"
+}
+Viewpoint {
+  orientation -0.019489606364715514 0.9989951772794519 -0.040358283116910275 0.3471976035790708
+  position -8.809426306810305 -0.11735490120399272 3.3134712666825017
+}
+TexturedBackground {
+  luminosity 5
+  skybox FALSE
+}
+TexturedBackgroundLight {
+  luminosity 1.5
+}
+StraightRoadSegment {
+  translation -2 -1.5 0
+  name "road_line1"
+  id "road_line1"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  leftBorder FALSE
+  length 4
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  rightBorderBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation -2 1.5 0
+  name "road_line2"
+  id "road_line2"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  rightBorder FALSE
+  length 4
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation -2.5 -1 0
+  rotation 0 0 1 1.5707996938995747
+  name "road_line3"
+  id "road_line3"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  rightBorder FALSE
+  length 2
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation 2.5 -1 0
+  rotation 0 0 1 1.5707996938995747
+  name "road_line4"
+  id "road_line4"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  leftBorder FALSE
+  length 2
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  rightBorderBoundingObject TRUE
+}
+CurvedRoadSegment {
+  translation 1.999 0.999 0
+  name "road_curve1"
+  id "road_curve1"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  roadBorderWidth [
+    0.1
+  ]
+  rightBorder FALSE
+  curvatureRadius 0.5
+  totalAngle 1.57
+  subdivision 2
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+  rightBarrierBoundingObject FALSE
+  leftBarrierBoundingObject FALSE
+}
+CurvedRoadSegment {
+  translation 1.999 -0.999 0
+  rotation 0 0 1 -1.570795613280012
+  name "road_curve2"
+  id "road_curve2"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  roadBorderWidth [
+    0.1
+  ]
+  rightBorder FALSE
+  curvatureRadius 0.5
+  totalAngle 1.57
+  subdivision 2
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+}
+CurvedRoadSegment {
+  translation -1.999 -0.999 0
+  rotation 0 0 1 3.141592653589793
+  name "road_curve3"
+  id "road_curve3"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  roadBorderWidth [
+    0.1
+  ]
+  rightBorder FALSE
+  curvatureRadius 0.5
+  totalAngle 1.57
+  subdivision 2
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+}
+CurvedRoadSegment {
+  translation -1.999 0.999 0
+  rotation 0 0 1 1.5707903061004251
+  name "road_curve4"
+  id "road_curve4"
+  width 1
+  lines [
+    RoadLine {
+      type "continuous"
+      width 0.02
+    }
+  ]
+  roadBorderWidth [
+    0.1
+  ]
+  rightBorder FALSE
+  curvatureRadius 0.5
+  totalAngle 1.57
+  subdivision 2
+  pavementAppearance Pavement {
+    colorOverride 0.45098 0.823529 0.0862745
+  }
+  roadBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation -2 0 0
+  name "center1"
+  width 1.8
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  length 4
+  pavementAppearance Pavement {
+    colorOverride 0.8 0 0
+  }
+  rightBorderBoundingObject TRUE
+  leftBorderBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation -1.9 -0.9 0
+  rotation 0 0 1 1.5707996938995747
+  name "wall1"
+  width 0.001
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  rightBorder FALSE
+  length 1.8
+  pavementAppearance Pavement {
+    colorOverride 0.8 0 0
+  }
+  leftBorderBoundingObject TRUE
+}
+StraightRoadSegment {
+  translation 1.9 0.9 0
+  rotation 0 0 1 -1.570795613280012
+  name "wall2"
+  width 0.001
+  lines [
+    RoadLine {
+      type "none"
+    }
+  ]
+  startingRoadBorderWidth 0.1
+  endingRoadBorderWidth 0.1
+  rightBorder FALSE
+  length 1.8
+  pavementAppearance Pavement {
+    colorOverride 0.8 0 0
+  }
+  leftBorderBoundingObject TRUE
+}
+MyRobot {
+  hidden position_0_0 9.64147230324926e-16
+  hidden position2_0_0 5.988703557579257e-08
+  hidden position_0_1 -1.4028734922723693e-16
+  hidden position2_0_1 5.988684791504539e-08
+  hidden position_0_2 -5.98663232972839e-08
+  hidden position_0_3 -5.986632065108012e-08
+  hidden linearVelocity_0 -1.8856319261259498e-06 4.61905864086306e-15 -3.61045139353475e-05
+  hidden angularVelocity_0 1.1250078788613029e-13 -5.1625282902403585e-05 -4.4617542183648785e-14
+  hidden rotation_1 -0.9999999999999998 4.820736151624629e-16 -1.6099431555677998e-08 5.960464477539063e-08
+  hidden linearVelocity_1 -1.0347934076289088e-06 5.735213211798861e-15 -3.337474141243055e-05
+  hidden angularVelocity_1 -2.3390806830627653e-13 -5.162537434833278e-05 -4.621729865677055e-14
+  hidden rotation_2 1 7.014367461361846e-17 2.342540208932794e-09 5.960464477539063e-08
+  hidden linearVelocity_2 -1.034793408845861e-06 1.4646034506388104e-15 -3.3374741408660576e-05
+  hidden angularVelocity_2 8.511952325036798e-14 -5.162537434929503e-05 -4.319828505980778e-14
+  hidden rotation_3 1 0 0 5.960464477539063e-08
+  hidden linearVelocity_3 -1.030413376207428e-06 3.829474035516671e-15 -3.8542135829755576e-05
+  hidden angularVelocity_3 -8.554955272852731e-14 -5.162519929770809e-05 -4.310001565355671e-14
+  hidden rotation_4 -1 0 0 5.960464477539063e-08
+  hidden linearVelocity_4 -1.030413377893356e-06 1.567394859297371e-14 -3.8542135816939283e-05
+  hidden angularVelocity_4 -1.0049940183775908e-12 -5.162519929828578e-05 -4.4886387407793604e-14
+  translation -1.830033125783665 1.4999999999999742 0.01876110796428062
+  rotation 3.3541516828851945e-12 -1 -7.35280504612989e-11 0.0016179355577357467
+}
