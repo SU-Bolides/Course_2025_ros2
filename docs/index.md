@@ -18,7 +18,7 @@ If you don't know anything about the car, start by reading through the Introduct
 
 The rest is covered in the other pages. You can also check out the [ressources folder](https://github.com/SU-Bolides/Course_2025/tree/main/ressources) in the main repo to check out the different documents related to the project. 
 
-## Introduction
+# Introduction
 
 This is the website for the Sorbonne University student teams entering in the CoVAPSy races organised by ENS Saclay every year. The race is devised into two distinct parts: 
 
