@@ -18,7 +18,7 @@ The main brain of the car is a Raspberry Pi 5 8 GB, coupled with an [STM32 L432K
 
 ## 3. Connections and fudgeries
 
-The LiDAR is plugged in via USB to the Raspberry Pi, and so is the U2D2. This creates too much current draw at LiDAR startup, so the LiDAR is aditionally plugged in via a secondary USB A port jacked in to the main 5V bus. As I didn't have any spare USB A ports lying around, I took one from an old keyboard of mine, making the result very janky. It works, but should be handled carefully. 
+The LiDAR is plugged in via USB to the Raspberry Pi, and so is the U2D2. This creates too much current draw at LiDAR startup, so the LiDAR is additionally plugged in via a secondary USB A port jacked in to the main 5V bus. As I didn't have any spare USB A ports lying around, I took one from an old keyboard of mine, making the result very janky. It works, but should be handled carefully. 
 
 The AX12-A is plugged in to the U2D2 to get commands, but is powered by a second cable, barely long enough to make the conneciton to the rear PCB. Once again, this works but should be handled with care, and probably replaced with a slightly longer cable. 
 
