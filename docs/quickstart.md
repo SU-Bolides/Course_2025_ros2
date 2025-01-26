@@ -17,8 +17,15 @@ This guide assumes you have already configured everything to work together. For 
 
 1. Turn on power to the car systems by setting the main red button to on. There should be a long beep, and the screen should stay off.
 2. Using a long pin, press the Raspberry Pi's power button, through the fan. The Pi's LED should turn green, and the fan should start spinning.
+
+<img src="https://github.com/SorbonneUniversityBolideContributors/Course_2025/blob/main/docs/assets/images/power_button.jpeg" width="400">
+
 3. Turn on your phone's hotspot. On iPhones, staying on the Personal Hotspot page is recommended, as well as disconnecting any other devices from the Hotspot. The car should connect to the hotspot within 30 seconds to a minute.
+
 4. Press the lowest button of the three buttons situated to the right of the screen. There should be a long beep, and the screen should turn on.
+
+<img src="https://github.com/SorbonneUniversityBolideContributors/Course_2025/blob/main/docs/assets/images/screen_buttons.jpeg" width="400">
+
 5. On your personal computer, connect to the phone hotspot and ping bolide1.local (or bolide3.local). You should see the following printouts appear:
 
 
