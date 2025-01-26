@@ -18,6 +18,10 @@ You can also turn on the Raspberry Pi Access Point (AP), although that isn't rec
 
 The easiest method to interact with the Pi's file system is to use VS Code with the Remote-SSH and Docker extensions. Once you have installed the extensions and reloaded VS Code, press ```CMD + SHIFT + P``` or ```CTRL+SHIFT+P``` to open the Command Palette, type in ```Remote SSH: Connect to host```, fill in the details and log in to the car. Then, on the sidebar to the right of your screen, click on the Docker icon (🐳), navigate to bolide_container, and right click ```Attach to VS Code```. If the container isn't started yet, start it. The home directory of the docker image is ```/home/bolide1/```. 
 
+## Setting the correct device ports
+
+The LiDAR and U2D2 are both connected over USB, but the docker container doesn't carry the aliases through. As such, one will be called ```/dev/ttyUSB0``` or ```/dev/ttyUSB1``` at random. If you get an error when launching the LiDAR or ackermann_controller.py nodes, go to ```rplidar_a2m12.launch``` and change the port from USB0 to USB1 or vice-versa. Then go to ackermann_controller.py, line 92, and do the same, setting it to the other one (not the same as the LiDAR). You can check that the devices are correctly connected by running ```ls /dev/tty*``` and looking for the ```/dev/ttyUSB``` devices. Note that if you're not in the docker container, the devices will have the correct aliases. If you figure out a way to have the aliases carry over to the docker container, that will be a significant improvement.
+
 ## Launching the existing algorithms
 
 The two main launch files are ```ready_for_nav.launch``` and ```ready_for_slam.launch```. They will launch the required process nodes to parse the various sensors' data, and launch additional files like the particle filter or the SLAM node depending on the chosen launch file. The actual controllers that make the decisions on where the cars move are to be launched separately. The best working one is the stanley_controller, which should be launched via the corresponding ```stanley_launch.launch``` file. 
