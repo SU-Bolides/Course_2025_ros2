@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Software
+title: Heuristics
 nav_order: 2
 ---
 
