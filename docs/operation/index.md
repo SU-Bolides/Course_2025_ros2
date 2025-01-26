@@ -40,11 +40,9 @@ ALWAYS TRIPLE CHECK THAT YOU HAVE THE CORRECT MAP AND CORRECT RACELINE LOADED.
 
 The raceline is specified in ```stanley_launch.launch```: 
 
-```json
-<param name="waypoints_path" value="/home/bolide1/bolide_ws/src/course_2024_pkgs/control_bolide/racelines/RACELINE_NAME.csv"/>```
+```<param name="waypoints_path" value="/home/bolide1/bolide_ws/src/course_2024_pkgs/control_bolide/racelines/RACELINE_NAME.csv"/>```
 
 While the map file is specified in ```ready_for_nav.launch```: 
 
-```json
-<arg name="map" default="$(find perception_bolide)/maps/MAP_NAME.yaml"/>```
+```<arg name="map" default="$(find perception_bolide)/maps/MAP_NAME.yaml"/>```
 ### VERY IMPORTANT
