@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Hardware
+title: Main components
 nav_order: 3
 ---
 
-# Hardware setup
+# Main components of the car
 
 ## 1. Chassis 
 
