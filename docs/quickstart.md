@@ -11,7 +11,7 @@ You have the car, and want to get it up and running.
 ## Requirements
 
 You need a mobile phone with hotspot capability, a computer preferably running Ubuntu with ROS installed, and a car equippped with a fully charged battery. Ensure that all the connections are safe and sound, and place the car on an elevated surface to lift the wheels off the ground, preventing it from taking off in case of a mishap.
-This guide assumes you have already configured everything to work together. For a more in detail guide, check out the Operation section
+This guide assumes you have already configured everything to work together. For a more in detail guide, check out the [Operation section](https://su-bolides.github.io/Course_2025/operation/)
 
 ## Procedure
 
