@@ -20,7 +20,7 @@ The easiest method to interact with the Pi's file system is to use VS Code with 
 
 ## Launching the existing algorithms
 
-The two main launch files are ```ready_for_nav.launch``` and ```ready_for_slam.launch```. They will launch the required process nodes to parse the various sensors' data, and launch additional files like the particle filter or the SLAM node depending on the chosen launch file. The actual controllers that make the decisions on where the cars move are to be launched separately. The best working one is the stanley_controller, which should be launched via the corresponding ```stanley_launch.launch" file. 
+The two main launch files are ```ready_for_nav.launch``` and ```ready_for_slam.launch```. They will launch the required process nodes to parse the various sensors' data, and launch additional files like the particle filter or the SLAM node depending on the chosen launch file. The actual controllers that make the decisions on where the cars move are to be launched separately. The best working one is the stanley_controller, which should be launched via the corresponding ```stanley_launch.launch``` file. 
 
 ## Making a map of the circuit
 
