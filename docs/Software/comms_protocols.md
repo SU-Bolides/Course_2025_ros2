@@ -10,7 +10,7 @@ nav_order: 2
 All the cars sensors must talk to each other efficiently and quickly to ensure accurate but fast data transmission. 
 
 ## STM32 <-> Raspberry PI
-
+### On the STM32
 The communication between the two uses SPI at 200 Hz, but a Circular Redundancy Check (CRC) is added to make sure only correct data is being processed. 
 
 The L432KC has a dedicated CRC module, which can take 4 bytes at a time. The following code is the SPI implementation on the STM32, with the CRC:
