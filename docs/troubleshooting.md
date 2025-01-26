@@ -116,3 +116,12 @@ Symptoms:
 
 To do:
 * Swap out the battery, the voltage is too low.
+
+
+## Problem not listed? 
+
+Check the [reports folder](https://github.com/SU-Bolides/Course_2025/tree/main/reports), you might find help there. 
+
+Open an issue on GitHub detailing the problem, close it when completed, add it to this list. 
+
+Shoot me an email me@nicolashammje.com, I might be able to help. 
