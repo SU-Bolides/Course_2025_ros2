@@ -9,6 +9,95 @@ nav_order: 2
 
 All the cars sensors must talk to each other efficiently and quickly to ensure accurate but fast data transmission. 
 
+## STM32 <-> Raspberry PI
+
+The communication between the two uses SPI at 200 Hz, but a Circular Redundancy Check (CRC) is added to make sure only correct data is being processed. 
+
+The L432KC has a dedicated CRC module, which can take 4 bytes at a time. The following code is the SPI implementation on the STM32, with the CRC:
+
+```c
+//Reset CRC;
+CRC->CR = 1;
+
+
+SPI_TxBuffer[0] = (uint8_t)((lectures_ADC[2] >> 8) & 0xFF);
+SPI_TxBuffer[1] = (uint8_t)(lectures_ADC[2] & 0xFF); //battery_voltage (unit ?)
+SPI_TxBuffer[2] = (uint8_t)((yaw >> 8) & 0xFF);
+SPI_TxBuffer[3] = (uint8_t)(yaw & 0xFF);
+
+CRC->DR = (uint32_t)((((uint16_t) lectures_ADC[2] << 16)) | ((uint16_t) yaw));
+
+
+SPI_TxBuffer[4] = (uint8_t)((((uint16_t)(lectures_ADC[0])) >> 8) & 0xFF);
+SPI_TxBuffer[5] = (uint8_t)(((uint16_t)(lectures_ADC[0])) & 0xFF);   // LEFT IR
+SPI_TxBuffer[6] = (uint8_t)((((uint16_t)(lectures_ADC[1])) >> 8) & 0xFF);
+SPI_TxBuffer[7] = (uint8_t)(((uint16_t)(lectures_ADC[1])) & 0xFF);  // RIGHT IR
+
+CRC->DR = (uint32_t)(((uint16_t) lectures_ADC[0] << 16) | ((uint16_t) lectures_ADC[1])); //Put 4 next bytes in the CRC register
+
+
+SPI_TxBuffer[8] = (uint8_t)((vitesse_mesuree_mm_s >> 8) & 0xFF); // Octet de poids fort de vitesse_mesuree_mm_s
+SPI_TxBuffer[9] = (uint8_t)(vitesse_mesuree_mm_s & 0xFF);    // Octet de poids faible de vitesse_mesuree_mm_s
+SPI_TxBuffer[10] = (uint8_t)((distance_US_cm >> 8) & 0xFF);
+SPI_TxBuffer[11] = (uint8_t)((distance_US_cm &0xFF));
+
+CRC->DR = (uint32_t)(((uint16_t) vitesse_mesuree_mm_s << 16) | ((uint16_t) distance_US_cm));
+
+
+SPI_TxBuffer[12] = (uint8_t)((acc_y >> 8) & 0xFF);
+SPI_TxBuffer[13] = (uint8_t)((acc_y &0xFF));
+SPI_TxBuffer[14] = (uint8_t)((yaw_rate >> 8) & 0xFF);
+SPI_TxBuffer[15] = (uint8_t)((yaw_rate &0xFF));
+
+CRC->DR = (uint32_t)(((uint16_t) acc_y << 16) | ((uint16_t) yaw_rate));
+
+
+uint32_t checksum = CRC->DR; //Read from register to get computer value
+
+CRC->CR = 1; //Reset, get it ready for the RX
+
+//Send the checksum over SPI.
+SPI_TxBuffer[16] = (uint8_t)((checksum >> 24) & 0xFF);
+SPI_TxBuffer[17] = (uint8_t)((checksum >> 16) & 0xFF);
+SPI_TxBuffer[18] = (uint8_t)((checksum >> 8) & 0xFF);
+SPI_TxBuffer[19] = (uint8_t)(checksum & 0xFF);
+
+HAL_SPI_Receive(&hspi3, (uint8_t *)SPI_RxBuffer, 8,30);
+HAL_SPI_Transmit(&hspi3, (uint8_t *)SPI_TxBuffer, 20,10);
+
+while(HAL_SPI_GetState(&hspi3) != HAL_SPI_STATE_READY);
+
+CRC->DR = (uint32_t)((uint32_t)SPI_RxBuffer[0] << 24 | (uint32_t)SPI_RxBuffer[1] << 16 | (uint32_t)SPI_RxBuffer[2] << 8 | (uint32_t)SPI_RxBuffer[3]);
+
+CRC->DR = (uint32_t)((uint32_t)SPI_RxBuffer[4] << 24 | (uint32_t)SPI_RxBuffer[5] << 16 | (uint32_t)SPI_RxBuffer[6] << 8 | (uint32_t)SPI_RxBuffer[7]);
+
+checksum = CRC->DR;
+if (checksum) {
+  asm("nop");
+} else {
+  ESC_pulse_us = (uint16_t)(((uint16_t)SPI_RxBuffer[0] << 8) | (uint16_t)SPI_RxBuffer[1]);
+}
+
+```
+
+At first, the CRC Reset bit is set to 1 to put everything back in a known config. The TX buffer is then filled up in 8 bit increments. Each data field is 16 bits (or 2 bytes), so each data field is split in two bytes, the first 8 bits being set then the next 8 shifted by a byte and loaded in. The CRC Data register is then set to the first 4 bytes. This process is repeated until SPI_TxBuffer is full and the whole data has been sequentially set to the CRC Data regiser. The computed value is then extracted from the Data Register by reading it, and its 4 bytes are loaded into the TxBuffer. 
+
+The CRC Reset bit is set to prepare the CRC for checking the received data. The RxBuffer is filled with the received data (sent by the RPi) and the TxBuffer is sent to the RPi. The received data is then sent to the CRC Data Register, and if the transmission was uncorrupted, the Data Register should then read 0. If that is the case, the ESC_pulse field is set to the RxBuffer data fields, and the whole process starts again on the STM32.
+
+### On the Raspberry Pi
+
+The ```stm32_publisher.py``` node takes care of the Rx Tx via SPI. The spidev library is used to access the SPI data, and the following function implements an equivalent CRC as to the one used in the STM32:
+```python
+def crc32mpeg2(self,buf, crc=0xffffffff):
+        for val in buf:
+            crc ^= val << 24
+            for _ in range(8):
+                crc = crc << 1 if (crc & 0x80000000) == 0 else (crc << 1) ^ 0x104c11db7
+        return crc
+```
+
+This returns 0 if the data is uncorrupted, and something else if it isn't. 
+
 
 ## STM32
 
