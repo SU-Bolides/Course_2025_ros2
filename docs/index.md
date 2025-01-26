@@ -16,4 +16,4 @@ Have fun working on this.
 
 If you don't know anything about the car, start by reading through the Introduction. If you want to get the car running as soon as possible, read the [Quick Start Guide](https://sorbonneuniversitybolidecontributors.github.io/Course_2025/quickstart.html). 
 
-The rest is covered in the other pages. You can also check out the "ressources" folder in the main repo to check out the different documents related to the project. 
+The rest is covered in the other pages. You can also check out the [ressources folder](https://github.com/SU-Bolides/Course_2025/tree/main/ressources) in the main repo to check out the different documents related to the project. 
