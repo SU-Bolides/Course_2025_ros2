@@ -36,7 +36,7 @@ You will now have a .csv file with the centerline coordinates x,y and the trackw
 
 ### VERY IMPORTANT 
 
-ALWAYS TRIPLE CHECK THAT YOU HAVE THE CORRECT MAP AND CORRECT RACELINE LOADED.
+**ALWAYS TRIPLE CHECK THAT YOU HAVE THE CORRECT MAP AND CORRECT RACELINE LOADED.**
 
 The raceline is specified in ```stanley_launch.launch```: 
 
