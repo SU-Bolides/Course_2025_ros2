@@ -1,3 +1,7 @@
+# Note:
+
+Slightly outdated. Refer to the [website](https://su-bolides.github.io/Course_2025/) for most information.
+
 # Setup bolide
 
 This file contains various information to setup the bolide.
