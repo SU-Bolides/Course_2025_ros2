@@ -5,7 +5,7 @@ remote_theme: carlosperate/jekyll-theme-rtd
 # Theme settings:
 site_author: Nicolas Hammje
 repo_url: "https://github.com/SorbonneUniversityBolideContributors/Course_2025"
-logo: './docs/assets/images/car-modified.png'
+logo: 'https://github.com/SU-Bolides/Course_2025/blob/main/docs/assets/images/car-modified.png?raw=true'
 edit_on_github: true
 github_docs_folder: true
 sticky_navigation: true
