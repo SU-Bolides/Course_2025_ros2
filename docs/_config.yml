@@ -5,6 +5,7 @@ remote_theme: carlosperate/jekyll-theme-rtd
 # Theme settings:
 site_author: Nicolas Hammje
 repo_url: "https://github.com/SorbonneUniversityBolideContributors/Course_2025"
+logo: 'https://ajuton-ens.github.io/CourseVoituresAutonomesSaclay/images/logo_CVAPS.png'
 edit_on_github: true
 github_docs_folder: true
 sticky_navigation: true
