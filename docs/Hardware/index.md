@@ -24,5 +24,5 @@ The AX12-A is plugged in to the U2D2 to get commands, but is powered by a second
 
 The Raspberry Pi has a tendency to turn off when the car accelerates too much. The current draw makes the voltage drop too low, so the Pi turns itself off as a safety measure, but this results in frequent crashes. Acceleration should be limited, but one could also look at slightly bumping up the voltage to the Pi to compensate for the subsequent drop. You will find all the PCB schematics on the [CoVAPSy GitHub](https://github.com/ajuton-ens/CourseVoituresAutonomesSaclay).
 
-Because the car uses a docker container, the device adresses of the U2D2 and LiDAR don't retain their aliases. As such, there's a 50/50 chance that one will be ```/dev/ttyUSB0``` or ```/dev/ttyUSB1```. Finding out which one is which is trivial, but the ports need to be updated to reflect the truth. You will find more details about this in the Operation section. 
+Because the car uses a docker container, the device adresses of the U2D2 and LiDAR don't retain their aliases. As such, there's a 50/50 chance that one will be ```/dev/ttyUSB0``` or ```/dev/ttyUSB1```. Finding out which one is which is trivial, but the ports need to be updated to reflect the truth. You will find more details about this in the [Operation section](https://su-bolides.github.io/Course_2025/operation/). 
 
