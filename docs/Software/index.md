@@ -16,7 +16,7 @@ The car is equipped with an IMU, a speed sensor, and a steering angle sensor (Th
 
 > The car only moves under its own power.
 
-As such, the commanded speed's sign is used to determine whether the car has been instructed to move forwards or backwards, and is then applied to the speed to sign it. Regarding orientation, using the IMU's angle alone leads to significant, which makes the LiDAR data lag behind the actual track, making the particle filter's job more difficult. As such, the steering angle + speed are used to estimate the linear and angular velocity of the car, following the Ackermann Bicycle kinematic model. This estimation is then fused with the IMU measured angular velocity, leading to a way better odometry which leads to cleaner maps and faster localisation. 
+As such, the commanded speed's sign is used to determine whether the car has been instructed to move forwards or backwards, and is then applied to the speed to sign it. Regarding orientation, using the IMU's angle alone leads to significant lag, which in turn makes the LiDAR data lag behind the actual track, making the particle filter's job more difficult. As such, the steering angle + speed are used to estimate the linear and angular velocity of the car, following the Ackermann Bicycle kinematic model. This estimation is then fused with the IMU measured angular velocity, leading to a way better odometry which leads to cleaner maps and faster localisation. 
 
 The IMU and speed sensor data is collected by the STM32 and transmitted to the Raspberry Pi over SPI, then parsed and published as a ROS Topic by the stm32_publisher node. This same node also handles the data being sent to the STM32. More information about this implementation in the Communication protocols section.
 
