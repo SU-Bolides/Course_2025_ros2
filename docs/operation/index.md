@@ -49,6 +49,4 @@ The raceline is specified in ```stanley_launch.launch```:
 While the map file is specified in ```ready_for_nav.launch```: 
 
 ```<arg name="map" default="$(find perception_bolide)/maps/MAP_NAME.yaml"/>```
-### VERY IMPORTANT
-
 Once you have verified that all the correct files are loaded, open RVIZ, verify that the car is in the right spot on the track. If it isn't click on the "2D pose estimate" button up top (look for a green arrow) and click and drag on the right position & orientation on the track. Then, launch the ```stanley_launch.launch``` file, and follow the on-screen instructions. The terminal will show a message asking you to verify that everything is correctly setup, and entering Y and pressing enter will make the car start racing. You can adjust the Stanley Controller parameters in the ```stanley_launch.launch``` file, though I recommend reading up on the heuristic behind it to really understand how each gain affects the car. 
