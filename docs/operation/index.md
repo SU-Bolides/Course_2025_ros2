@@ -12,7 +12,7 @@ Here you will find the detailed guide on how to interact and operate with the ca
 
 The Raspberry Pi connects to networks specified in the ```/etc/wpa_supplicant/wpa_supplicant.conf``` file. The current three networks are my home network, the router, and my phone's hotspot. If you don't have access to the router, you can simply rename your phone's hotspot to ```money trees``` and set the password to ```Poulette``` and the car will connect to it, allowing you to change the config. You should also be able to connect via Ethernet to it directly, although I haven't personally tried this out. 
 
-You can also turn on the Raspberry Pi Access Point (AP), although that isn't recommended because you lose all internet connectivity, which makes updating or installing packages a chore. The current preferred method of access is using your phone's hotspot. 
+**If the car doesn't connect to a network, it should start it's own Access Point.** It isn't recommended to use this because you lose all internet connectivity, which makes updating or installing packages a chore. The current preferred method of access is using your phone's hotspot. If you can only connect to the AP, you can then type ```sudo raspi-config```, navigate to ```System/Wireless LAN```, and enter the details of the network you want to connect to.
 
 ## Navigating the file system
 
