@@ -94,6 +94,14 @@ Symptoms:
 To do:
 * Download the course_202X_pkgs to your local workspace and catkin_make. Then, run ```source devel/setup.bash```.
 
+### Couldn't find executable XXX. Found the following, but they're either not files or not executable
+
+Symptoms:
+- When trying to rosrun or roslaunch something, this pops up.
+
+To do:
+* ```chmod + x /path/to/file.py```
+
 ### Launching a node yields nothing, CTRL-C wakes it up but it still doesn't work.
 
 Symptoms:
