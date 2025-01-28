@@ -75,6 +75,13 @@ Symptoms:
 To do:
 * ssh to the car and ```hostname -I```. On your own computer, check that the IP matches that in ```echo $ROS_MASTER_URI```. On the car, check that it matches ```echo $ROS_MASTER_URI``` and ```echo $ROS_HOSTNAME```. Correct the errors in the respective bashrcs. **Don't forget to add the :11311 after the ROS_MASTER_URI IP**.
 
+### Could not open device "/dev/ttyUSB0": no such device
+
+Symptoms: 
+- When trying to launch a node, this error appears, even though the command ```ls /dev/tty*``` lists the device.
+
+To do:
+* restart the docker container with ```docker stop bolide_container``` and ```docker start bolide_container``` from the bolide ssh (before attaching to the container).
 
 ## General errors
 
