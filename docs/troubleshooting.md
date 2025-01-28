@@ -47,6 +47,7 @@ Symptoms:
 
 To do:
 * Disconnect every other connected device. Stay on the personal hotspot page to make it discoverable. Reboot the Raspberry Pi, or your phone.
+* Check available networks for BolideX_AP. If it is available, connect to it, and use ```sudo raspi-config``` then ```System / Wireless LAN``` to connect to your phone.
 
 ### ping: cannot resolve bolide.local: Unknown host
 
