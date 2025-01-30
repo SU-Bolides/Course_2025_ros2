@@ -16,18 +16,18 @@ Take your favourite mode of transportation to station Saint-Cyr-l'Ecole. It is c
 
 Once there, walk the path marked below to get to the Sorbonne University campus. 
 
-<img src="assets/images/getting_to_the_campus.png" width="600">
+<img src="../assets/images/getting_to_the_campus.png" width="600">
 
 Once at the unmistakably Sorbonne door, enter the code or scan your badge, and then walk all the way to building 11. Don't forget to pass by building 2, the "accueil", to notify of your presence. 
 
-<img src="assets/images/plan_campus.jpg" width="800">
+<img src="../assets/images/plan_campus.jpg" width="800">
 
 Once you've reached building 11, named "Jacques Julien", scan your badge at the door, then follow the below directions: 
 
-<img src="assets/images/IMG_2634.jpeg" width="500">
-<img src="assets/images/IMG_2635.jpeg" width="500">
-<img src="assets/images/IMG_2636.jpeg" width="500">
-<img src="assets/images/IMG_2637.jpeg" width="500">
+<img src="../assets/images/IMG_2634.jpeg" width="500">
+<img src="../assets/images/IMG_2635.jpeg" width="500">
+<img src="../assets/images/IMG_2636.jpeg" width="500">
+<img src="../assets/images/IMG_2637.jpeg" width="500">
 
 ## Setting up at Saint-Cyr. 
 
