@@ -22,7 +22,7 @@ This guide assumes you have already configured everything to work together. For 
 
 3. Turn on your phone's hotspot. On iPhones, staying on the Personal Hotspot page is recommended, as well as disconnecting any other devices from the Hotspot. The car should connect to the hotspot within 30 seconds to a minute.
 
-4. Press the lowest button of the three buttons situated to the right of the screen. There should be a long beep, and the screen should turn on.
+4. Press the lowest of the three yellow buttons situated to the right of the screen. There should be a long beep, and the screen should turn on.
 
 <img src="assets/images/screen_buttons.jpeg" width="400">
 
