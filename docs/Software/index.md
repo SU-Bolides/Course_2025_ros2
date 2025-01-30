@@ -30,12 +30,12 @@ The navigation heuristic used in the 2024 Race closely follows the one used by S
 
 ## Navigation - MPC
 
-Implementing an MPC controller would make obstacle avoidance a lot easier, but it has proven to be more difficult than initally thought. First tests with a primitive RK4 controller have showcased the need for a more robust constraint formulation. The current implementation uses ACADOS to generate C code based on CasADi formulas, allowing for fast execution times. The model used is a kinematic model, because the current harware is limiting the max speed of the car below slip conditions, and the trajectory following heuristic is based on the Alex Liniger implementation for the AMZ Race Car of ETH Zurich. Another must read. 
+Implementing an MPC controller would make obstacle avoidance a lot easier, but it has proven to be more difficult than initally thought. First tests with a primitive RK4 controller have showcased the need for a more robust constraint formulation. The current implementation uses ACADOS to generate C code based on CasADi formulas, allowing for fast execution times. The model used is a kinematic model, because the current hardware is limiting the max speed of the car below slip conditions, and the trajectory following heuristic is based on the Alex Liniger implementation for the AMZ Race Car of ETH Zurich. Another must read. 
 
 ## Obstacle detection - LiDAR
 
-An approach similar than the one I used in my Autonomous TurtleBot project has been implemented effectively, using DB Scan and manually tuned thresholds to detect clusters corresponding to obstacle. This works well, and the fact that all the obstacles are assumed to be cars of roughly similar shapes and sizes makes it very robust. It is of my personal opinion that this is the most effective method given the context.
+An approach similar to the one I used in my Autonomous TurtleBot project has been implemented effectively, using DB Scan and manually tuned thresholds to detect clusters corresponding to obstacle. This works well, and the fact that all the obstacles are assumed to be cars of roughly similar shapes and sizes makes it very robust. It is of my personal opinion that this is the most effective method given the context.
 
 ## Obstacle detection - Vision
 
-Using YOLO to detect opponents has proven less effective, more computationnaly expensive, and less accurate than LiDAR based deteciton. Nonetheless, the promised arrival of a Qualcomm RB5 Devkit should give the approach a boost. 
+Using YOLO to detect opponents has proven less effective, more computationally expensive, and less accurate than LiDAR based deteciton. Nonetheless, the promised arrival of a Qualcomm RB5 Devkit should give the approach a boost. 
