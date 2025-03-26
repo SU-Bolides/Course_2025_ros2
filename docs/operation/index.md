@@ -32,7 +32,7 @@ After connecting to the car and placing it in the track, launch the ```ready_for
 
 ## Finding the optimal trajectory
 
-Using the ```extract_centerline.ipynb``` notebook, extract the centerline from the map. If the centerline isn't a line, but has some "branches", use an image editing program (GIMP is free on Ubuntu) to paint the curves smooth. Then, run the ```sanity_check.ipynb``` notebook to double check that the extracted centerline is in the right coordinate system. 
+Using the ```map_converter.ipynb``` notebook, extract the centerline from the map. If the centerline isn't a line, but has some "branches", use an image editing program (GIMP is free on Ubuntu) to paint the curves smooth. Then, run the ```sanity_check.ipynb``` notebook to double check that the extracted centerline is in the right coordinate system. 
 
 You will now have a .csv file with the centerline coordinates x,y and the trackwidths to the left and right of the point. Place that file in the raceline optimisation "inputs/tracks" folder, then run ```main_globaltraj_tt02.py```. After it has completed, you will find the trajectory in "outputs/MAP_NAME/". The folder names include their creation date. Run the ```visualize_raceline.ipynb``` notebook to triple check that the extracted trajectory is correct and feasible. Then, take the original MAP_NAME.yaml, MAP_NAME.pgm, as well as the raceline file, and place the first two in ```perception_bolide/maps/```, and the latter in ```control_bolide/racelines/```. 
 
