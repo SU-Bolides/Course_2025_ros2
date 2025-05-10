@@ -1,6 +1,7 @@
 # Autonomous RC Car Race 2025
 
-![Team at ENS](ressources/pictures/Us_at_COVAPsy.jpg)
+![Team at ENS](https://raw.githubusercontent.com/SU-Bolides/Course_2025_ros2/main/ressources/pictures/Us_at_CoVAPsy.jpg
+)
 
 ## Project Overview
 
@@ -28,4 +29,4 @@ This repository includes:
 - **Resources:** The [ressources](ressources/) folder contains essential materials for the project.
 - **STM32 Code:** The [CoVAPSy_STM32](CoVAPSy_STM32/) directory houses the STM32 microcontroller code, which connects the car's sensors to the Raspberry Pi.
 
-![RC Cars](ressources/pictures/Voitures.png)
+![RC Cars](https://raw.githubusercontent.com/SU-Bolides/Course_2025_ros2/main/ressources/pictures/Voitures.png)
